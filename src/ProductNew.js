@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image, Dimensions, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, ScrollView, Alert} from 'react-native';
 import {getJSON} from "./common/fetch"
 
 export default class ProductNew extends Component {
@@ -14,7 +14,11 @@ export default class ProductNew extends Component {
             let images = data.map((img, i) => {
                 let {id, name, price,} = img
                 return (
-                    <Image resizeMode={"center"} key={i} source={{uri: img.thumbPath}} style={style.image}/>
+                    <TouchableOpacity key={i} onPress={() => {
+                        Alert.alert("pid:" + id + "")
+                    }}>
+                        <Image resizeMode={"center"} source={{uri: img.thumbPath}} style={style.image}/>
+                    </TouchableOpacity>
                 )
             })
             this.setState({

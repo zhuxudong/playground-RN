@@ -33,7 +33,7 @@ export default class NavTop extends Component {
 let style = StyleSheet.create({
     navContainer: {
         flexDirection: "row",
-        justifyContent: "center"
+        justifyContent: "center",
     },
     nav: {
         height: 64,
