@@ -1,0 +1,53 @@
+{
+  "_args": [
+    [
+      "react-native-unity-view@1.1.7",
+      "F:\\Git\\lt_open"
+    ]
+  ],
+  "_from": "react-native-unity-view@1.1.7",
+  "_id": "react-native-unity-view@1.1.7",
+  "_inBundle": false,
+  "_integrity": "sha1-6UKMYnVNTBigBo1jUWIFy0Vqz3E=",
+  "_location": "/react-native-unity-view",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "react-native-unity-view@1.1.7",
+    "name": "react-native-unity-view",
+    "escapedName": "react-native-unity-view",
+    "rawSpec": "1.1.7",
+    "saveSpec": null,
+    "fetchSpec": "1.1.7"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "http://registry.npm.taobao.org/react-native-unity-view/download/react-native-unity-view-1.1.7.tgz",
+  "_spec": "1.1.7",
+  "_where": "F:\\Git\\lt_open",
+  "author": {
+    "name": "xzper"
+  },
+  "description": "Integrate unity3d within a React Native app. Add a react native component to show unity. Works on both iOS and Android.",
+  "devDependencies": {
+    "@types/prop-types": "^15.5.2",
+    "@types/react": "^16.0.36",
+    "@types/react-native": "^0.52.8",
+    "typescript": "^2.7.1"
+  },
+  "keywords": [
+    "react",
+    "native",
+    "unity"
+  ],
+  "license": "MIT",
+  "main": "out/index.js",
+  "name": "react-native-unity-view",
+  "scripts": {
+    "compile": "node node_modules/typescript/bin/tsc"
+  },
+  "typings": "out/index.d.ts",
+  "version": "1.1.7"
+}
