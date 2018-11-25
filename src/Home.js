@@ -25,8 +25,6 @@ export default class HelloWorldApp extends Component {
         return (
             <View style={{flex: 1}}>
                 <NavTop></NavTop>
-                <Banner></Banner>
-                <ProductNew postMessageToUnity={this.postMessage.bind(this)}></ProductNew>
                 <UnityView style={{flex: 1}} ref={(ref) => this.unity = ref}
                            onMessage={this.onMessage.bind(this)}
                 ></UnityView>
