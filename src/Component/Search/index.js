@@ -40,7 +40,8 @@ export default class Search extends Component {
                         style={style.back}
                         onPress={this.onClickBack.bind(this)}
                     >
-                        <Image source={require("./img/back.png")}/>
+                        <Image source={require("./img/back.png")} style={{
+                        }}/>
                     </TouchableOpacity>
                     <SearchBar
                         round
@@ -86,7 +87,10 @@ const style = StyleSheet.create({
         alignItems: "center"
     },
     back: {
-        marginRight: 15
+      width:30,
+      height:30,
+      justifyContent:"center",
+      alignItems:"center"
     },
     searchBarContainer: {
         flex: 1,

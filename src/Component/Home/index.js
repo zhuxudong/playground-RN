@@ -4,7 +4,6 @@ import UnityView from "../../react-native-unity-view/out/index";
 import Banner from "../Banner/index"
 import Fashion from "../Fashion/index"
 import Recommend from "../Recommend/index"
-
 /**
  * @param {object} containerStyle - 容器样式
  * */

@@ -38,7 +38,7 @@ export default class Banner extends Component {
 
                 <View style={style.search}>
                     <TouchableOpacity onPress={() => {
-                        navigation.navigate("Search")
+                        navigation.navigate("SeriesDetail")
                     }}>
                         <Image source={require("./img/search.png")} style={style.searchImg}/>
                     </TouchableOpacity>

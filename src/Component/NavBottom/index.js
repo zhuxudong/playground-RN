@@ -23,7 +23,7 @@ export default class NavBottom extends Component {
                     componentName = "Home";
                     break;
                 case 1:
-                    componentName = "Classify";
+                    componentName = "ClassifySecond";
                     break;
                 case 2:
                     componentName = "Favorite";
