@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {View, Text, Input, ScrollView, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import {SearchBar} from 'react-native-elements'
+import {View, Text, ScrollView, StyleSheet} from 'react-native';
+import SearchBar from "../../Component/SearchBar/index"
 import navigation from "../../router/navigationService"
 
 /**
@@ -15,7 +15,6 @@ export default class Search extends Component {
     }
 
     onChangeText(text) {
-        console.log(text)
     }
 
     onClickClear() {
@@ -35,31 +34,9 @@ export default class Search extends Component {
     render() {
         return (
             <ScrollView style={{...style.container, ...this.props.containerStyle}}>
-                <View style={style.head}>
-                    <TouchableOpacity
-                        style={style.back}
-                        onPress={this.onClickBack.bind(this)}
-                    >
-                        <Image source={require("./img/back.png")} style={{
-                        }}/>
-                    </TouchableOpacity>
-                    <SearchBar
-                        round
-                        onChangeText={this.onChangeText.bind(this)}
-                        onClear={this.onClickClear.bind(this)}
-                        placeholder='搜索'
-                        placeholderTextColor={"#CDCDCD"}
-                        containerStyle={style.searchBarContainer}
-                        inputContainerStyle={style.inputContainerStyle}
-                        inputStyle={style.inputStyle}
-                    />
-                    <TouchableOpacity
-                        style={style.camera}
-                        onPress={this.onClickCamera.bind(this)}
-                    >
-                        <Image source={require("./img/camera.png")}/>
-                    </TouchableOpacity>
-                </View>
+                <SearchBar
+                    onClickBack={this.onClickBack.bind(this)}
+                />
                 <View style={style.history}>
                     <Text style={style.historyTitle}>历史搜索</Text>
                     <View style={style.cardContainer}>
@@ -81,34 +58,6 @@ const style = StyleSheet.create({
     container: {
         flex: 1,
         margin: 10
-    },
-    head: {
-        flexDirection: "row",
-        alignItems: "center"
-    },
-    back: {
-      width:30,
-      height:30,
-      justifyContent:"center",
-      alignItems:"center"
-    },
-    searchBarContainer: {
-        flex: 1,
-        backgroundColor: "transparent",
-        borderBottomColor: "transparent",
-        borderTopColor: "transparent",
-    },
-    inputContainerStyle: {
-        overflow: "visible",
-        backgroundColor: "transparent",
-    },
-    inputStyle: {
-        fontSize: 14,
-        color: "#000"
-    },
-    camera: {
-        marginLeft: 15,
-        marginRight: 20
     },
     history: {
         marginTop: 17,

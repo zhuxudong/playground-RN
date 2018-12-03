@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, ScrollView, StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
-import {SearchBar} from 'react-native-elements'
+import SearchBar from "../../Component/SearchBar/index"
 
 /**
  * @param {object} containerStyle - 容器样式
@@ -29,7 +29,6 @@ export default class Favorite extends Component {
     }
 
     onChangeText(text) {
-        console.log(text)
     }
 
     onClickClear() {
@@ -43,24 +42,7 @@ export default class Favorite extends Component {
     render() {
         return (
             <ScrollView style={{...style.container, ...this.props.containerStyle}}>
-                <View style={style.head}>
-                    <SearchBar
-                        round
-                        onChangeText={this.onChangeText.bind(this)}
-                        onClear={this.onClickClear.bind(this)}
-                        placeholder='搜索'
-                        placeholderTextColor={"#CDCDCD"}
-                        containerStyle={style.searchBarContainer}
-                        inputContainerStyle={style.inputContainerStyle}
-                        inputStyle={style.inputStyle}
-                    />
-                    <TouchableOpacity
-                        style={style.camera}
-                        onPress={this.onClickCamera.bind(this)}
-                    >
-                        <Image source={require("./img/camera.png")}/>
-                    </TouchableOpacity>
-                </View>
+                <SearchBar noBack/>
                 {
                     this.state.items.map((item, i) => {
                         let {url, title, subTitle, price} = item;
@@ -98,28 +80,6 @@ const style = StyleSheet.create({
     container: {
         flex: 1,
         margin: 10
-    },
-    head: {
-        flexDirection: "row",
-        alignItems: "center"
-    },
-    searchBarContainer: {
-        flex: 1,
-        backgroundColor: "transparent",
-        borderBottomColor: "transparent",
-        borderTopColor: "transparent",
-    },
-    inputContainerStyle: {
-        overflow: "visible",
-        backgroundColor: "transparent",
-    },
-    inputStyle: {
-        fontSize: 14,
-        color: "#000"
-    },
-    camera: {
-        marginLeft: 15,
-        marginRight: 20
     },
     card: {
         marginBottom: 10,

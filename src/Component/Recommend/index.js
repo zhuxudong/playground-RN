@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, Image, TouchableOpacity, ScrollView} from 'react-native';
+import {Text, View, StyleSheet, Image, TouchableOpacity, ScrollView, FlatList} from 'react-native';
 import {getJSON} from "../../common/fetch"
 
 /**
@@ -8,41 +8,72 @@ import {getJSON} from "../../common/fetch"
 export default class Recommend extends Component {
     constructor(props) {
         super(props);
-        getJSON("/api/front/index/getIndexThumbs").then(json => {
+        this.state = {
+            items: []
+        }
+        this.getItems();
+
+    }
+
+    getItems() {
+        getJSON("/api/open/index/dailyRecommend").then(json => {
+            this.setState({
+                items: json.data
+            })
         })
+    }
+
+    renderItem({item}) {
+        let {date, recommends} = item;
+        let month = date.split("-")[1] - 0;
+        let day = date.split("-")[2] - 0;
+        let today = new Date().getDate()
+        return (
+            <View style={style.card}>
+                {
+                    today === day ?
+                        <Text style={style.title}>
+                            ToDay &nbsp; {day}
+                            <Text style={style.subTitle}>&nbsp;&nbsp;&nbsp;推荐</Text>
+                        </Text> :
+                        <Text style={style.subTitle}>{month}月{day}日推荐</Text>
+                }
+                {
+                    recommends.map((recommend, i) => {
+                        return (
+                            <View style={style.cardBody} key={i}>
+                                <Image style={style.img}
+                                       source={{uri: recommend.thumbPath}}/>
+                                <Text
+                                    style={style.content}>{recommend.description}>
+                                </Text>
+                            </View>
+                        )
+                    })
+                }
+            </View>
+        )
+    }
+
+    keyExtractor(item) {
+        return item.date
     }
 
     render() {
         return (
-            <View style={{...style.container, ...this.props.containerStyle}}>
-                <View style={style.card}>
-                    <Text style={style.title}>
-                        ToDay &nbsp; {21}
-                        <Text style={style.subTitle}>&nbsp;&nbsp;&nbsp;推荐</Text>
-                    </Text>
-                    <Image style={style.img}
-                           source={{uri: "https://linctex3d.oss-cn-shanghai.aliyuncs.com/Fashion/index/PpMFD727W2UvKfm5dqDefeVP.png"}}/>
-                    <Text
-                        style={style.content}>{"橘滋 (Juicy Couture) 推出全新的假日系列，整个系列充满着饱满的热情与奢华感。本系列的设计灵感源自欢乐的假期，设计师运用闪烁元素、华丽的印花图案与颜色组合，丰富整个系列。"}</Text>
-                </View>
-                <View style={style.card}>
-                    <Text style={style.title}>
-                        ToDay &nbsp; {10}
-                        <Text style={style.subTitle}>&nbsp;&nbsp;&nbsp;推荐</Text>
-                    </Text>
-                    <Image style={style.img}
-                           source={{uri: "https://linctex3d.oss-cn-shanghai.aliyuncs.com/Fashion/index/PpMFD727W2UvKfm5dqDefeVP.png"}}/>
-                    <Text
-                        style={style.content}>{"橘滋 (Juicy Couture) 推出全新的假日系列，整个系列充满着饱满的热情与奢华感。本系列的设计灵感源自欢乐的假期，设计师运用闪烁元素、华丽的印花图案与颜色组合，丰富整个系列。"}</Text>
-                </View>
-            </View>
+            <FlatList style={{...style.container, ...this.props.containerStyle}}
+                      data={this.state.items}
+                      keyExtractor={this.keyExtractor}
+                      renderItem={this.renderItem.bind(this)}
+            >
+            </FlatList>
         );
     }
 }
 
 let style = StyleSheet.create({
     container: {
-        padding: 10
+        padding: 10,
     },
     card: {
         marginBottom: 30,
@@ -50,11 +81,21 @@ let style = StyleSheet.create({
     title: {
         fontSize: 22,
         color: "#36393D",
-        marginBottom: 5
+        marginBottom: 10
+    },
+    subTitle: {
+        color: "#36393D",
+        fontSize: 12,
+        marginBottom: 10,
+        letterSpacing: 1
+    },
+    cardBody: {
+        marginBottom: 20
     },
     img: {
         height: 170,
-        borderRadius: 10
+        borderRadius: 10,
+        resizeMode: "cover"
     },
     content: {
         marginTop: 6,

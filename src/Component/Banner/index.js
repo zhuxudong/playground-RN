@@ -13,7 +13,12 @@ export default class Banner extends Component {
         this.state = {
             images: []
         }
-        getJSON("/api/front/index/getIndexThumbs").then(json => {
+        this.getCarousels();
+
+    }
+
+    getCarousels() {
+        getJSON("/api/open/index/indexCarousels").then(json => {
             let images = json.data;
             images = images.map((img, i) => {
                 return (
@@ -26,6 +31,7 @@ export default class Banner extends Component {
                 images: images
             })
         })
+
     }
 
     render() {
@@ -38,7 +44,7 @@ export default class Banner extends Component {
 
                 <View style={style.search}>
                     <TouchableOpacity onPress={() => {
-                        navigation.navigate("SeriesDetail")
+                        navigation.navigate("Search")
                     }}>
                         <Image source={require("./img/search.png")} style={style.searchImg}/>
                     </TouchableOpacity>
@@ -63,7 +69,8 @@ let style = StyleSheet.create({
     },
     bannerImage: {
         flex: 1,
-        resizeMode: "cover"
+        resizeMode: "cover",
+        borderRadius: 5
     },
     search: {
         flex: 1,
@@ -75,11 +82,11 @@ let style = StyleSheet.create({
     searchImg: {
         width: 65,
         height: 90,
-        resizeMode: "contain"
+        resizeMode: "cover"
     },
     captureImg: {
         width: 65,
         height: 35,
-        resizeMode: "contain"
+        resizeMode: "cover"
     }
 })

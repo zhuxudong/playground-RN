@@ -1,0 +1,8 @@
+{
+  "navBottom": {
+    "homeIconName": "首页",
+    "classifyIconName": "分类",
+    "favoriteIconName": "收藏",
+    "myIconName": "我的"
+  }
+}

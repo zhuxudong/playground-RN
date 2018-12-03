@@ -1,0 +1,8 @@
+{
+  "navBottom":{
+    "homeIconName": "Home",
+    "classifyIconName": "Classify",
+    "favoriteIconName": "Favorite",
+    "myIconName": "My"
+  }
+}
