@@ -24,10 +24,14 @@ export default class FashionCard extends Component {
 
     getLocations(colors) {
         let locations = [0]
-        colors.map((color) => color.percent).reduce((prev, now) => {
-            locations.push(prev, prev)
-            return prev + now
-        })
+        if (!colors.length) {
+            locations.push(0, 1)
+        } else {
+            colors.map((color) => color.percent).reduce((prev, now) => {
+                locations.push(prev, prev)
+                return prev + now
+            })
+        }
         return locations
     }
 
@@ -40,6 +44,9 @@ export default class FashionCard extends Component {
                 c.push(color.color, color.color)
             }
         })
+        if (!c.length) {
+            c.push("#ffffff", "#ffffff")
+        }
         return c
     }
 
@@ -81,15 +88,20 @@ export default class FashionCard extends Component {
 let style = StyleSheet.create({
     container: {
         width: 330,
-        marginRight: 20
+        height: 215,
+        backgroundColor: "#fff",
+        elevation: 4,
+        borderRadius: 10,
+        overflow: "hidden",
+        marginRight: 10,
+        marginBottom: 20,
+        marginLeft: 10
     },
     card: {
         flex: 1
     },
     cardHead: {
         height: 10,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
     },
     cardBody: {
         padding: 5,

@@ -18,7 +18,7 @@ export default class NavBottom extends Component {
         this.setState({
             activeIndex: index
         }, () => {
-            let componentName = ""
+            let componentName = "";
             switch (index) {
                 case 0:
                     componentName = "Home";
@@ -35,7 +35,12 @@ export default class NavBottom extends Component {
             }
             navigation.navigate(componentName)
         })
+    }
 
+    highLight(index) {
+        this.setState({
+            activeIndex: index
+        })
     }
 
     render() {
@@ -92,10 +97,13 @@ export default class NavBottom extends Component {
 
 const style = StyleSheet.create({
     container: {
-        height: 49,
+        height: 50,
+        width: "100%",
         flexDirection: "row",
         justifyContent: "space-evenly",
         alignItems: "center",
+        borderTopColor: "#F1F1F1",
+        borderTopWidth: 1
     },
     item: {
         justifyContent: "center",

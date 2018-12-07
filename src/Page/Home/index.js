@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {StyleSheet, ScrollView} from 'react-native';
-import UnityView from "../../react-native-unity-view/out/index";
 import Banner from "../../Component/Banner/index"
 import Fashion from "../../Component/Fashion/index"
 import Recommend from "../../Component/Recommend/index"
@@ -27,6 +26,7 @@ export default class Index extends Component {
 
 let style = StyleSheet.create({
     container: {
-        flex: 1
-    }
+        flex: 1,
+        backgroundColor: "#fff"
+    },
 })

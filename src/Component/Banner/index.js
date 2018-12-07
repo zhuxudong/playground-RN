@@ -41,7 +41,6 @@ export default class Banner extends Component {
                         showsButtons={false}>
                     {this.state.images}
                 </Swiper>
-
                 <View style={style.search}>
                     <TouchableOpacity onPress={() => {
                         navigation.navigate("Search")
@@ -77,7 +76,6 @@ let style = StyleSheet.create({
         backgroundColor: "#fff",
         justifyContent: "space-between",
         paddingLeft: 10,
-        paddingRight: 10
     },
     searchImg: {
         width: 65,

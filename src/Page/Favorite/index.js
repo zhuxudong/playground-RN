@@ -41,37 +41,40 @@ export default class Favorite extends Component {
 
     render() {
         return (
-            <ScrollView style={{...style.container, ...this.props.containerStyle}}>
-                <SearchBar noBack/>
-                {
-                    this.state.items.map((item, i) => {
-                        let {url, title, subTitle, price} = item;
-                        return (
-                            <View style={style.card} key={i}>
-                                <View style={style.cardHead}>
-                                    <Image style={style.cardHeadImg} source={{uri: url}}/>
-                                    <View style={style.cardHeadInfo}>
-                                        <Text style={style.cardHeadInfoTitle}>{title}</Text>
-                                        <Text style={style.cardHeadInfoSubTitle}>{subTitle}</Text>
-                                        <Text style={style.cardHeadInfoPrice}> <Text
-                                            style={style.cardHeadInfoPriceSymbol}>￥ </Text> {price}</Text>
+            <View style={{...style.container, ...this.props.containerStyle}}>
+                <SearchBar containerStyle={style.searchBarContainer} noBack/>
+                <ScrollView style={style.scrollView}>
+                    {
+                        this.state.items.map((item, i) => {
+                            let {url, title, subTitle, price} = item;
+                            return (
+                                <View style={style.card} key={i}>
+                                    <View style={style.cardHead}>
+                                        <Image style={style.cardHeadImg} source={{uri: url}}/>
+                                        <View style={style.cardHeadInfo}>
+                                            <Text style={style.cardHeadInfoTitle}>{title}</Text>
+                                            <Text style={style.cardHeadInfoSubTitle}>{subTitle}</Text>
+                                            <Text style={style.cardHeadInfoPrice}> <Text
+                                                style={style.cardHeadInfoPriceSymbol}>￥ </Text> {price}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={style.cardFooterContainer}>
+                                        <View style={style.cardDel}>
+                                            <Image source={require("./img/remove.png")}/>
+                                            <Text style={style.cardDelText}>删除产品</Text>
+                                        </View>
+                                        <View style={style.cardAddShop}>
+                                            <Image source={require("./img/shop.png")}/>
+                                            <Text style={style.cardAddShopText}>加入购物车</Text>
+                                        </View>
                                     </View>
                                 </View>
-                                <View style={style.cardFooterContainer}>
-                                    <View style={style.cardDel}>
-                                        <Image source={require("./img/remove.png")}/>
-                                        <Text style={style.cardDelText}>删除产品</Text>
-                                    </View>
-                                    <View style={style.cardAddShop}>
-                                        <Image source={require("./img/shop.png")}/>
-                                        <Text style={style.cardAddShopText}>加入购物车</Text>
-                                    </View>
-                                </View>
-                            </View>
-                        )
-                    })
-                }
-            </ScrollView>
+                            )
+                        })
+                    }
+                </ScrollView>
+            </View>
+
         )
     }
 }
@@ -79,15 +82,24 @@ export default class Favorite extends Component {
 const style = StyleSheet.create({
     container: {
         flex: 1,
-        margin: 10
+    },
+    searchBarContainer: {
+        padding: 10
+    },
+    scrollView: {
+        flex: 1,
+        backgroundColor: "#F5F5F5"
     },
     card: {
-        marginBottom: 10,
-        paddingRight: 10,
-        paddingBottom: 15
+        margin: 10,
+        backgroundColor: "#fff",
+        borderRadius: 5,
+        overflow: "hidden",
+        elevation: 3
     },
     cardHead: {
         flexDirection: "row",
+        padding:10,
     },
     cardHeadImg: {
         width: 90,
@@ -117,19 +129,25 @@ const style = StyleSheet.create({
         fontSize: 10
     },
     cardFooterContainer: {
-        marginTop: 15,
+        padding:5,
         flexDirection: "row",
-        justifyContent: "center"
+        justifyContent: "center",
+        borderTopColor: "#F1F1F1",
+        borderTopWidth: 1
     },
     cardDel: {
         flex: 1,
         flexDirection: "row",
-        justifyContent: "center"
+        justifyContent: "center",
+        alignItems:"center",
+        borderRightColor: "#F1F1F1",
+        borderRightWidth: 1
     },
     cardAddShop: {
         flex: 1,
         flexDirection: "row",
-        justifyContent: "center"
+        justifyContent: "center",
+        alignItems:"center"
     },
     cardDelText: {
         marginLeft: 5,

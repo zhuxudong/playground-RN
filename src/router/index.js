@@ -1,6 +1,11 @@
 import React from 'react';
-import {Platform, StatusBar, StyleSheet} from 'react-native';
-import {createStackNavigator, createAppContainer, createBottomTabNavigator} from 'react-navigation';
+import {View, Platform, StatusBar, StyleSheet} from 'react-native';
+import {
+    createStackNavigator,
+    createAppContainer,
+    createBottomTabNavigator,
+    createSwitchNavigator
+} from 'react-navigation';
 import navigationService from './navigationService';
 import Home from "../Page/Home/index"
 import Classify from "../Page/Classify/index"
@@ -10,43 +15,69 @@ import My from "../Page/My/index"
 import Search from "../Page/Search/index"
 import SeriesDetail from "../Page/SeriesDetail/index"
 import NavBottom from "../Component/NavBottom/index"
+import Unity from "../Page/Unity/index"
+import Login from "../Page/Login/index"
 
-const AppNavigator = createBottomTabNavigator({
-    Home: (props) => (<Home {...props} containerStyle={style.haveTop}/>),
-    Classify: (props) => (<Classify {...props} containerStyle={style.haveTop}/>),
-    ClassifySecond: (props) => (<ClassifySecond {...props} containerStyle={style.haveTop}/>),
-    Favorite: (props) => (<Favorite {...props} containerStyle={style.haveTop}/>),
-    My: (props) => (<My {...props} containerStyle={style.haveTop}/>),
-    Search: (props) => (<Search {...props} containerStyle={style.haveTop}/>),
-    SeriesDetail: (props) => (<SeriesDetail {...props} containerStyle={style.haveTop}/>),
+const SwitchNavigator = createSwitchNavigator({
+    Classify,
+    Favorite,
+    My,
+})
+const AppNavigator = createSwitchNavigator({
+    Home,
+    Classify,
+    Favorite,
+    My,
+    Unity,
+    ClassifySecond,
+    Login,
+    Search,
+    SeriesDetail,
 }, {
+    headerMode: "none",
     initialRouteName: "Home",
     tabBarComponent: NavBottom,
     defaultNavigationOptions: ({navigation}) => ({
-        tabBarVisible: navigation.state.routeName !== "Search"
+        tabBarVisible: ["Search", "Unity"].indexOf(navigation.state.routeName) === -1
     })
 });
 const AppContainer = createAppContainer(AppNavigator);
 
 class App extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {}
+    }
+
     render() {
         return (
-            <AppContainer ref={navigatorRef => {
-                navigationService.setTopLevelNavigator(navigatorRef);
-            }}
-            />
+            <View style={style.container}>
+                <StatusBar hidden={true}/>
+                <AppContainer ref={navigatorRef => {
+                    navigationService.setTopLevelNavigator(navigatorRef);
+                }}
+                    // screenProps={{showNavBottom: this.showNavBottom.bind(this)}}
+                />
+                {
+                    <NavBottom ref={ref => {
+                        navigationService.setNavBottom(ref)
+                    }}/>
+                }
+            </View>
         );
     }
 }
 
 const style = StyleSheet.create({
-    haveTop: {
+    container: {
+        flex: 1,
+        backgroundColor: "#fff",
         ...Platform.select({
             ios: {
                 // backgroundColor: 'red',
             },
             android: {
-                marginTop: StatusBar.currentHeight
+                // marginTop: StatusBar.currentHeight
             },
         })
     }

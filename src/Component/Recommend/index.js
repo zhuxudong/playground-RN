@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet, Image, TouchableOpacity, ScrollView, FlatList} from 'react-native';
 import {getJSON} from "../../common/fetch"
+import navigation from "../../router/navigationService"
 
 /**
  * @param {object} containerStyle - 容器样式
@@ -16,10 +17,16 @@ export default class Recommend extends Component {
     }
 
     getItems() {
-        getJSON("/api/open/index/dailyRecommend").then(json => {
+        getJSON("/api/open/index/dailyRecommend?is_daily=1").then(json => {
             this.setState({
                 items: json.data
             })
+        })
+    }
+
+    onClickRecommend(pid) {
+        navigation.navigate("Unity", {
+            pid
         })
     }
 
@@ -42,8 +49,12 @@ export default class Recommend extends Component {
                     recommends.map((recommend, i) => {
                         return (
                             <View style={style.cardBody} key={i}>
-                                <Image style={style.img}
-                                       source={{uri: recommend.thumbPath}}/>
+                                <TouchableOpacity
+                                    onPress={this.onClickRecommend.bind(this, recommend.id)}
+                                >
+                                    <Image style={style.img}
+                                           source={{uri: recommend.thumbPath}}/>
+                                </TouchableOpacity>
                                 <Text
                                     style={style.content}>{recommend.description}>
                                 </Text>
@@ -51,6 +62,7 @@ export default class Recommend extends Component {
                         )
                     })
                 }
+                <View style={style.headLine}></View>
             </View>
         )
     }
@@ -73,10 +85,17 @@ export default class Recommend extends Component {
 
 let style = StyleSheet.create({
     container: {
-        padding: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
     },
     card: {
         marginBottom: 30,
+    },
+    headLine: {
+        height: 1,
+        backgroundColor: "#F1F1F1",
+        marginTop: 10,
+        marginBottom: 10
     },
     title: {
         fontSize: 22,

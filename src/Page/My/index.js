@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import {View, ScrollView, StyleSheet, Image, Text, TouchableOpacity, Platform, StatusBar, Button} from 'react-native';
+import {View, StyleSheet, Image, Text, TouchableOpacity, AsyncStorage} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import navigation from "../../router/navigationService"
+import {getJSON, checkLogin, logout} from "../../common/fetch"
 
 /**
  * @param {object} containerStyle - 容器样式
@@ -10,11 +12,56 @@ export default class My extends Component {
         super(props)
         this.state = {
             avatarUrl: null,
-            name: "App",
-            identity: "游客",
-            email: "j.tcehjvy@gmail.co",
-            tel: "4562-9013424"
+            name: "",
+            identity: "",
+            email: "",
+            tel: "",
+            loginSuccess: false
         }
+        this.checkLogin()
+    }
+
+    checkLogin() {
+        checkLogin().then((loginSuccess) => {
+            if (loginSuccess) {
+                this.setState({
+                    loginSuccess: true
+                })
+                this.refreshUserInfo();
+            } else {
+                navigation.navigate("Login", {
+                    fromRouterName: "My"
+                });
+                // this.setState({
+                //     name: "App",
+                //     identity: "游客"
+                // })
+            }
+        })
+    }
+
+    refreshUserInfo() {
+        AsyncStorage.getItem("access_token").then((token) => {
+            AsyncStorage.getItem("token_type").then((type) => {
+                getJSON("/api/open/user/info", {
+                    Authorization: type + " " + token
+                }).then(({data}) => {
+                    this.setState({
+                        avatarUrl: data.avatarPath,
+                        name: data.name,
+                        identity: data.reCategory,
+                        email: data.email,
+                        tel: data.tel,
+                    })
+                })
+            })
+        })
+    }
+
+    onClickLogout() {
+        logout().then(() => {
+            navigation.navigate("Home")
+        })
     }
 
     render() {
@@ -29,8 +76,8 @@ export default class My extends Component {
                         }
                     </View>
                     <View style={{justifyContent: "center"}}>
-                        <Text style={style.name}>{this.state.name || "App"}</Text>
-                        <Text style={style.subTitle}>{this.state.identity || "游客"}</Text>
+                        <Text style={style.name}>{this.state.name}</Text>
+                        <Text style={style.subTitle}>{this.state.identity}</Text>
                     </View>
                 </View>
                 <View style={style.item}>
@@ -47,17 +94,20 @@ export default class My extends Component {
                     </View>
                     <Text style={style.subTitle}>{this.state.tel}</Text>
                 </View>
-                <View style={style.logout}>
-                    <LinearGradient
-                        style={style.linearGradient}
-                        colors={["#FF9B58", "#F15947"]}
-                        start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-                    >
-                    </LinearGradient>
-                    <TouchableOpacity style={style.logoutTextContainer} activeOpacity={.9}>
-                        <Text style={style.logoutText}>退出登陆</Text>
+                {
+                    this.state.loginSuccess &&
+                    <TouchableOpacity style={style.logoutContainer} onPress={this.onClickLogout.bind(this)}>
+                        <View style={style.logout}>
+                            <LinearGradient
+                                style={style.linearGradient}
+                                colors={["#FF9B58", "#F15947"]}
+                                start={{x: 0, y: 0}} end={{x: 1, y: 0}}
+                            >
+                            </LinearGradient>
+                            <Text style={style.logoutText}>退出登陆</Text>
+                        </View>
                     </TouchableOpacity>
-                </View>
+                }
             </View>
         )
     }
@@ -66,7 +116,6 @@ export default class My extends Component {
 const style = StyleSheet.create({
     container: {
         flex: 1,
-        margin: 10
     },
     icon1: {
         marginRight: 13
@@ -76,16 +125,19 @@ const style = StyleSheet.create({
         marginRight: 15
     },
     baseInfo: {
-        height: 50,
-        marginBottom: 40,
-        flexDirection: "row"
+        paddingTop: 20,
+        paddingBottom: 20,
+        flexDirection: "row",
+        borderBottomWidth: 5,
+        borderBottomColor: "#F1F1F1"
     },
     avatarContainer: {
         width: 50,
         height: 50,
         overflow: "hidden",
         borderRadius: 50,
-        marginRight: 20
+        marginRight: 20,
+        marginLeft: 10
     },
     avatar: {
         width: 50,
@@ -98,39 +150,45 @@ const style = StyleSheet.create({
     subTitle: {
         fontSize: 12,
         color: "#4A4A4A",
-        letterSpacing: 2
+        letterSpacing: 2,
+        paddingRight: 10,
     },
     item: {
-        marginBottom: 30,
+        paddingTop: 15,
+        paddingBottom: 15,
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center"
+        alignItems: "center",
+        borderBottomWidth: 1,
+        borderBottomColor: "#F2F3F4"
     },
     itemLeft: {
+        paddingLeft: 10,
         flexDirection: "row",
         alignItems: "center",
     },
-    logout: {
+    logoutContainer: {
         position: "absolute",
         bottom: 100,
-        width: "100%",
+        width: "90%",
+        left: "5%",
         height: 52,
         backgroundColor: "red",
         borderRadius: 5,
         overflow: "hidden"
     },
+    logout: {
+        flex: 1
+    },
     linearGradient: {
         flex: 1
     },
-    logoutTextContainer: {
+    logoutText: {
         position: "absolute",
-        flex: 1,
+        textAlign: "center",
+        lineHeight: 52,
         width: "100%",
         height: "100%",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    logoutText: {
         color: "#fff",
         fontSize: 14,
         letterSpacing: 2,

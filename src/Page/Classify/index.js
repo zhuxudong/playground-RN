@@ -11,35 +11,66 @@ export default class Classify extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            navLeft: ["全部", "上衣", "裤子", "鞋子", "箱包", "配饰", "羽绒"],
+            navLeft: [{
+                name: "全部",
+                pid: 0
+            }],
             activeNavIndex: 0,
-            items: {}
+            items: {
+                //pid:[Dom]
+            }
         }
-        this.getItems();
+        this.getNavLeft();
     }
 
-    goItem() {
-        navigation.navigate("ClassifySecond")
+    goItem(pid) {
+        navigation.navigate("ClassifySecond", {
+            pid
+        })
     }
 
-    getItems() {
+    getNavLeft() {
+        getJSON("/api/open/categories?level=1").then(({data}) => {
+            let navLeft = []
+            data.forEach((nav) => {
+                navLeft.push({
+                    name: nav.name,
+                    pid: nav.id
+                })
+            })
+            this.setState({
+                navLeft: [
+                    ...this.state.navLeft,
+                    ...navLeft
+                ]
+            }, () => {
+                //初始化加载第2个,不加载全部，太慢
+                this.onClickNav(1)
+            })
+        })
+    }
+
+    getItems(orderIndex) {
+        let pid = 0;
+        if (this.state.navLeft[orderIndex]) {
+            pid = this.state.navLeft[orderIndex].pid
+        }
         let items = this.state.items;
-        let name = this.state.navLeft[this.state.activeNavIndex];
-        //内存中数据根据名字来判断，有可能会刷新列表，activeNavIndex判断可能会出错
-        if (!items[name]) {
-            getJSON("/api/open/index/indexCarousels").then(json => {
-                items[name] = json.data.map((img, i) => {
+        //内存中数据根据pid来进行缓存
+        if (!items[pid]) {
+            getJSON(`/api/open/categories?level=2&pid=${pid}`).then(json => {
+                items[pid] = json.data.map((item, i) => {
                     return (
                         <TouchableOpacity key={i}
                                           style={style.item}
-                                          onPress={this.goItem.bind(this)}
+                                          onPress={this.goItem.bind(this, item.id)}
                         >
-                            <View>
+                            <View style={style.item}>
                                 <Image
                                     style={style.img}
-                                    source={{uri: img.path}}
+                                    source={{uri: item.thumbPath}}
                                 />
-                                <Text style={style.itemName}>测试</Text>
+                                <Text style={style.itemName}>{item.display_name}</Text>
                             </View>
                         </TouchableOpacity>
                     )
@@ -48,7 +79,7 @@ export default class Classify extends Component {
                     return {
                         items: {
                             ...prevState.items,
-                            ...items[name]
+                            ...items
                         }
                     }
                 })
@@ -57,33 +88,37 @@ export default class Classify extends Component {
     }
 
     onClickNav(navIndex) {
+        if (!this.state.navLeft[navIndex]) {
+            return
+        }
         this.setState({
             activeNavIndex: navIndex
         }, () => {
-            this.getItems()
+            this.getItems(navIndex)
         })
     }
 
     render() {
         return (
             <View style={{...style.container, ...this.props.containerStyle}}>
-                <SearchBar noBack/>
+                <SearchBar containerStyle={style.searchBarStyle} noBack/>
                 <View style={style.bodyWrapper}>
                     <View style={style.leftContainer}>
                         <ScrollView style={style.scrollLeft}>
                             {
-                                this.state.navLeft.map((navName, index) => {
+                                this.state.navLeft.map(({name}, index) => {
                                     return (
                                         <TouchableOpacity
                                             style={style.navItemContainer}
-                                            key={navName}
+                                            key={name}
                                             onPress={
                                                 this.onClickNav.bind(this, index)
                                             }
                                         >
-                                            <View style={style.navItem}>
+                                            <View
+                                                style={[style.navItem, this.state.activeNavIndex === index && style.activeNavItem]}>
                                                 <Text
-                                                    style={this.state.activeNavIndex === index ? style.navTextActive : style.navText}>{navName}</Text>
+                                                    style={this.state.activeNavIndex === index ? style.navTextActive : style.navText}>{name}</Text>
                                                 {
                                                     (this.state.activeNavIndex === index) &&
                                                     <View style={style.navIcon}/>
@@ -96,13 +131,11 @@ export default class Classify extends Component {
                             }
                         </ScrollView>
                     </View>
-                    <View style={style.rightContainer}>
-                        <ScrollView contentContainerStyle={style.scrollRight}>
-                            {
-                                this.state.items[this.state.navLeft[this.state.activeNavIndex]]
-                            }
-                        </ScrollView>
-                    </View>
+                    <ScrollView style={style.rightContainer} contentContainerStyle={style.scrollRight}>
+                        {
+                            this.state.items[this.state.navLeft[this.state.activeNavIndex].pid]
+                        }
+                    </ScrollView>
                 </View>
             </View>
         )
@@ -113,25 +146,33 @@ const style = StyleSheet.create({
     container: {
         flex: 1,
     },
+    searchBarStyle: {
+        padding: 10
+    },
     bodyWrapper: {
         flex: 1,
-        flexDirection: "row"
+        flexDirection: "row",
     },
     leftContainer: {
         width: 80,
     },
     scrollLeft: {
-        height: "100%"
+        height: "100%",
+        backgroundColor: "#F1F1F1"
     },
     navItemContainer: {
         height: 80,
-        paddingLeft: 20,
         justifyContent: "center",
         flexGrow: 1
     },
     navItem: {
+        flex: 1,
+        paddingLeft: 20,
         flexDirection: "row",
         alignItems: "center"
+    },
+    activeNavItem: {
+        backgroundColor: "#fff"
     },
     navIcon: {
         marginLeft: 8,
@@ -157,12 +198,10 @@ const style = StyleSheet.create({
         flex: 1
     },
     scrollRight: {
-        height: "100%",
         padding: 10,
-        width: "100%",
         flexWrap: "wrap",
         flexDirection: "row",
-        justifyContent: "space-evenly"
+        // justifyContent: "space-evenly"
     },
     item: {
         marginBottom: 20,
@@ -171,7 +210,7 @@ const style = StyleSheet.create({
         alignItems: "center",
     },
     img: {
-        resizeMode: "cover",
+        resizeMode: "contain",
         height: 90,
         width: 110
     },

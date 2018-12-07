@@ -55,25 +55,28 @@ export default class MySearchBar extends Component {
                 >
                     <Image source={require("./img/back.png")} style={style.backIcon}/>
                 </TouchableOpacity>}
-                <SearchBar
-                    round
-                    onChangeText={this.onChangeText.bind(this)}
-                    onClear={this.onClickClear.bind(this)}
-                    placeholder='搜索'
-                    placeholderTextColor={"#CDCDCD"}
-                    containerStyle={style.searchBarContainer}
-                    inputContainerStyle={style.inputContainerStyle}
-                    inputStyle={style.inputStyle}
-                />
-                {
-                    !this.props.noCamera &&
-                    <TouchableOpacity
-                        style={style.camera}
-                        onPress={this.onClickCamera.bind(this)}
-                    >
-                        <Image source={require("./img/camera.png")}/>
-                    </TouchableOpacity>
-                }
+                <View style={style.searchBarAndCameraContainer}>
+                    <SearchBar
+                        round
+                        onChangeText={this.onChangeText.bind(this)}
+                        onClear={this.onClickClear.bind(this)}
+                        placeholder='搜索'
+                        placeholderTextColor={"#CDCDCD"}
+                        containerStyle={style.searchBarContainer}
+                        inputContainerStyle={style.inputContainerStyle}
+                        inputStyle={style.inputStyle}
+                    />
+                    {
+                        !this.props.noCamera &&
+                        <TouchableOpacity
+                            style={style.camera}
+                            onPress={this.onClickCamera.bind(this)}
+                        >
+                            <Image source={require("./img/camera.png")}/>
+                        </TouchableOpacity>
+                    }
+                </View>
+
             </View>
         )
     }
@@ -83,7 +86,9 @@ const style = StyleSheet.create({
     container: {
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 10
+        paddingBottom: 10,
+        borderBottomColor: "#F1F1F1",
+        borderBottomWidth: 1
     },
     back: {
         width: 35,
@@ -94,11 +99,20 @@ const style = StyleSheet.create({
         flex: 1,
         resizeMode: "contain"
     },
+    searchBarAndCameraContainer: {
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#F2F3F5",
+        borderRadius: 4,
+        overflow: "hidden"
+    },
     searchBarContainer: {
         flex: 1,
-        backgroundColor: "transparent",
+        backgroundColor: "#F2F3F5",
         borderBottomColor: "transparent",
         borderTopColor: "transparent",
+        padding: 0
     },
     inputContainerStyle: {
         overflow: "visible",
@@ -106,7 +120,7 @@ const style = StyleSheet.create({
     },
     inputStyle: {
         fontSize: 14,
-        color: "#000"
+        color: "#000",
     },
     camera: {
         marginLeft: 15,
