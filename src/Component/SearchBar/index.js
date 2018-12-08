@@ -5,6 +5,7 @@ import {SearchBar} from 'react-native-elements'
 /** 顶部搜索组件
  * @param {object} containerStyle - 容器样式
  * @param {object} onChangeText - 文字变化触发的事件
+ * @param {object} onClickSearch - 点击搜索触发的事件
  * @param {object} onClickClear - 取消文本触发的事件
  * @param {object} onClickBack - 退回时触发的事件
  * @param {object} onClickCamera - 点击相机触发的事件
@@ -19,11 +20,19 @@ export default class MySearchBar extends Component {
 
     constructor(props) {
         super(props)
+        this.value = ""
     }
 
     onChangeText(text) {
+        this.value = text;
         if (typeof this.props.onChangeText === "function") {
             this.props.onChangeText(text)
+        }
+    }
+
+    onClickSearch() {
+        if (typeof this.props.onClickSearch === "function") {
+            this.props.onClickSearch(this.value)
         }
     }
 
@@ -65,6 +74,7 @@ export default class MySearchBar extends Component {
                         containerStyle={style.searchBarContainer}
                         inputContainerStyle={style.inputContainerStyle}
                         inputStyle={style.inputStyle}
+                        searchIcon={<SearchIcon onClickSearch={this.onClickSearch.bind(this)}/>}
                     />
                     {
                         !this.props.noCamera &&
@@ -78,6 +88,28 @@ export default class MySearchBar extends Component {
                 </View>
 
             </View>
+        )
+    }
+}
+
+class SearchIcon extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    onClickSearch() {
+        if (typeof this.props.onClickSearch === "function") {
+            this.props.onClickSearch()
+        }
+    }
+
+    render() {
+        return (
+            <TouchableOpacity
+                onPress={this.onClickSearch.bind(this)}
+            >
+                <Image source={require("./img/search.png")}/>
+            </TouchableOpacity>
         )
     }
 }

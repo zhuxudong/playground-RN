@@ -25,7 +25,8 @@ export default class Classify extends Component {
 
     goItem(pid) {
         navigation.navigate("ClassifySecond", {
-            pid
+            pid,
+            from: "Classify"
         })
     }
 
@@ -98,10 +99,18 @@ export default class Classify extends Component {
         })
     }
 
+    onClickSearch(text) {
+        console.log(text)
+    }
+
     render() {
         return (
             <View style={{...style.container, ...this.props.containerStyle}}>
-                <SearchBar containerStyle={style.searchBarStyle} noBack/>
+                <SearchBar
+                    containerStyle={style.searchBarStyle}
+                    noBack
+                    onClickSearch={this.onClickSearch.bind(this)}
+                />
                 <View style={style.bodyWrapper}>
                     <View style={style.leftContainer}>
                         <ScrollView style={style.scrollLeft}>

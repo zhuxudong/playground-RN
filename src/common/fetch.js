@@ -1,4 +1,5 @@
 import config from "../config/config"
+import storage from "../config/storage"
 import {AsyncStorage} from "react-native"
 
 function getJSON(url, header, refreshAgainWhen401 = true) {
@@ -68,10 +69,10 @@ function post(url, body, header, refreshAgainWhen401 = true) {
 
 function getJSONWithToken(url, header, refreshAgainWhen401 = true) {
     return new Promise((resolve, reject) => {
-        AsyncStorage.getItem("access_token").then((token) => {
+        AsyncStorage.getItem(storage.accessToken).then((token) => {
             if (!token)
                 return;
-            AsyncStorage.getItem("token_type").then((type) => {
+            AsyncStorage.getItem(storage.tokenType).then((type) => {
                 getJSON(url, {
                     ...header,
                     Authorization: type + " " + token
@@ -85,10 +86,10 @@ function getJSONWithToken(url, header, refreshAgainWhen401 = true) {
 
 function postWithToken(url, body, header, refreshAgainWhen401 = true) {
     return new Promise((resolve, reject) => {
-        AsyncStorage.getItem("access_token").then((token) => {
+        AsyncStorage.getItem(storage.accessToken).then((token) => {
             if (!token)
                 return;
-            AsyncStorage.getItem("token_type").then((type) => {
+            AsyncStorage.getItem(storage.tokenType).then((type) => {
                 post(url, body, {
                     ...header,
                     Authorization: type + " " + token
@@ -102,7 +103,7 @@ function postWithToken(url, body, header, refreshAgainWhen401 = true) {
 
 function refreshToken() {
     return new Promise((resolve) => {
-        AsyncStorage.getItem("refresh_token").then((refreshToken) => {
+        AsyncStorage.getItem(storage.refreshToken).then((refreshToken) => {
             post("/oauth/token", {
                 "client_id": "2",
                 "grant_type": "refresh_token",
@@ -110,9 +111,9 @@ function refreshToken() {
                 "refresh_token": refreshToken
             }, null, false).then((data) => {
                 new Promise.all([
-                    AsyncStorage.setItem("access_token", data["access_token"]),
-                    AsyncStorage.setItem("refresh_token", data["refresh_token"]),
-                    AsyncStorage.setItem("token_type", data["token_type"])
+                    AsyncStorage.setItem(storage.accessToken, data["access_token"]),
+                    AsyncStorage.setItem(storage.refreshToken, data["refresh_token"]),
+                    AsyncStorage.setItem(storage.tokenType, data["token_type"])
                 ]).then(() => {
                     resolve(data["token_type"] + " " + data["access_token"])
                 })
@@ -123,7 +124,7 @@ function refreshToken() {
 
 function checkLogin() {
     return new Promise((resolve, reject) => {
-        AsyncStorage.getItem("access_token").then((token) => {
+        AsyncStorage.getItem(storage.accessToken).then((token) => {
             if (!token) {
                 resolve(false)
             } else {
@@ -143,9 +144,9 @@ function login(username, password) {
             password
         }, null, false).then((data) => {
             new Promise.all([
-                AsyncStorage.setItem("access_token", data["access_token"]),
-                AsyncStorage.setItem("refresh_token", data["refresh_token"]),
-                AsyncStorage.setItem("token_type", data["token_type"])
+                AsyncStorage.setItem(storage.accessToken, data["access_token"]),
+                AsyncStorage.setItem(storage.refreshToken, data["refresh_token"]),
+                AsyncStorage.setItem(storage.tokenType, data["token_type"])
             ]).then(() => {
                 resolve()
             })
@@ -157,9 +158,9 @@ function login(username, password) {
 
 function logout() {
     return new Promise.all([
-        AsyncStorage.removeItem("access_token"),
-        AsyncStorage.removeItem("refresh_token"),
-        AsyncStorage.removeItem("token_type")
+        AsyncStorage.removeItem(storage.accessToken),
+        AsyncStorage.removeItem(storage.refreshToken),
+        AsyncStorage.removeItem(storage.tokenType)
     ])
 }
 

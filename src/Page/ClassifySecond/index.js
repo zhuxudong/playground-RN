@@ -8,19 +8,20 @@ import navigation from "../../router/navigationService"
 /**
  * @param {object} containerStyle - 容器样式
  * */
-export default class Index extends Component {
+export default class ClassifySecond extends Component {
     constructor(props) {
         super(props)
         this.state = {
             items: []
-
         }
-        this.getItems();
+        this.pid = this.props.navigation.getParam("pid")
+        this.filter = this.props.navigation.getParam("filter")
+        this.from = this.props.navigation.getParam("from")
+        this.getItems(this.pid, this.filter)
     }
 
-    getItems() {
-        let pid = this.props.navigation.getParam("pid")
-        getJSON(`/api/open/products?per_page=1000&page=1&cid=${pid}`).then(json => {
+    getItems(pid, filter) {
+        getJSON(`/api/open/products?per_page=1000&page=1&cid=${pid}&k=${filter}`).then(json => {
             this.setState({
                 items: json.data.data.map((item) => ({
                     url: item.thumbPath,
@@ -34,7 +35,7 @@ export default class Index extends Component {
     }
 
     onClickBack() {
-        navigation.navigate("Classify")
+        navigation.navigate(this.from)
     }
 
     onClickProduct(pid) {
@@ -43,14 +44,19 @@ export default class Index extends Component {
         })
     }
 
+    onClickSearch(text) {
+        this.getItems(0, text)
+    }
+
     render() {
         return (
             <View style={{...style.container, ...this.props.containerStyle}}>
                 <SearchBar
                     containerStyle={style.searchBarContainer}
+                    onClickSearch={this.onClickSearch.bind(this)}
                     onClickBack={this.onClickBack.bind(this)}
                 />
-                <ScrollView style={{flex:1}} contentContainerStyle={style.items}>
+                <ScrollView style={{flex: 1}} contentContainerStyle={style.items}>
                     {this.state.items.map((item, index) => {
                         return (
                             <ProductCard key={index}
