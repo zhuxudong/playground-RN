@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, StyleSheet, Image, Text, TouchableOpacity, AsyncStorage} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import navigation from "../../router/navigationService"
-import {getJSON, checkLogin, logout} from "../../common/fetch"
+import {getJSON, getJSONWithToken, checkLogin, logout} from "../../common/fetch"
 
 /**
  * @param {object} containerStyle - 容器样式
@@ -41,19 +41,13 @@ export default class My extends Component {
     }
 
     refreshUserInfo() {
-        AsyncStorage.getItem("access_token").then((token) => {
-            AsyncStorage.getItem("token_type").then((type) => {
-                getJSON("/api/open/user/info", {
-                    Authorization: type + " " + token
-                }).then(({data}) => {
-                    this.setState({
-                        avatarUrl: data.avatarPath,
-                        name: data.name,
-                        identity: data.reCategory,
-                        email: data.email,
-                        tel: data.tel,
-                    })
-                })
+        getJSONWithToken("/api/open/user/info").then(({data}) => {
+            this.setState({
+                avatarUrl: data.avatarPath,
+                name: data.name,
+                identity: data.reCategory,
+                email: data.email,
+                tel: data.tel,
             })
         })
     }
