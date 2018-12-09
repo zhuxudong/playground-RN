@@ -52,11 +52,13 @@ class App extends React.Component {
     render() {
         return (
             <View style={style.container}>
-                <StatusBar hidden={true}/>
+                <StatusBar hidden={false}
+                           translucent
+                           barStyle={"dark-content"}
+                />
                 <AppContainer ref={navigatorRef => {
                     navigationService.setTopLevelNavigator(navigatorRef);
                 }}
-                    // screenProps={{showNavBottom: this.showNavBottom.bind(this)}}
                 />
                 {
                     <NavBottom ref={ref => {
@@ -77,7 +79,7 @@ const style = StyleSheet.create({
                 // backgroundColor: 'red',
             },
             android: {
-                // marginTop: StatusBar.currentHeight
+                paddingTop: StatusBar.currentHeight
             },
         })
     }
